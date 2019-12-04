@@ -1,0 +1,60 @@
+﻿@model dynamic;
+
+@if (Model != null)
+{
+    @foreach (var module in Model)
+    {
+        <ul class="modules-list-edit">
+            <li class="module js_module js_module_child" id="@module.Id">
+                <div class="li-body">
+                    <div class="col-sm-12">
+                        <div class="modules">
+                            @if (module.IsPermitted)
+                            {
+                                <input id="@module.Id" name="@module.Name" code="@module.Code" isdefault="@module.IsDefault" parentmoduleid="@module.ParentModuleId" type="checkbox" class="modulecheck" checked="checked" onclick="OnModuleSelected(this);">
+                            }
+                            else
+                            {
+                                <input id="@module.Id" name="@module.Name" code="@module.Code" isdefault="@module.IsDefault" parentmoduleid="@module.ParentModuleId" type="checkbox" class="modulecheck" onclick="OnModuleSelected(this);">
+                            }
+
+                            <label for="@module.Id"><i class="fas fa-cube" aria-hidden="true"></i>@module.Name</label>
+                        </div>
+                    </div>
+                </div>
+
+                @if (module.Operations.Count > 0)
+                {
+                    @foreach (var operation in module.Operations)
+                    {
+                        <ul class="mt-2 js_op_container">
+                            <li class="js_operation js_op_child" id="@operation.Id">
+                                <div class="li-body">
+                                    <div class="col-sm-12">
+                                        <div class="checkboxwrapper operations">
+                                            @if (operation.IsPermitted)
+                                            {
+                                                <input type="checkbox" id="@operation.Id" name="@operation.Name" moduleid="@module.Id" code="@operation.Code" isdefault="@operation.IsDefault" parentoperationid="@operation.ParentOperationId" class="operationcheck" checked="checked">
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" id="@operation.Id" name="@operation.Name" moduleid="@module.Id" code="@operation.Code" isdefault="@operation.IsDefault" parentoperationid="@operation.ParentOperationId" class="operationcheck">
+                                            }
+                                            <label for="@operation.Id"><i class="fas fa-cog" aria-hidden="true"></i>@operation.Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    }
+                }
+
+                @if (module.ChildModules.Count > 0)
+                {
+                    <hr />
+                    <partial name="~/Views/Permissions/_ModuleOperations.cshtml" model="@module.ChildModules" />
+                }
+            </li>
+        </ul>
+    }
+}
